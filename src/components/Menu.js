@@ -16,6 +16,7 @@ function Menu() {
                     <li className="nav-item"><Link to ="/logout" className="nav-link" href="#!">Logout</Link></li>
                     <li className="nav-item"><Link to ="/signup" className="nav-link">Signup</Link></li>
                     <li className="nav-item"><Link to ="/dashboard" className="nav-link" href="#!">Dashboard</Link></li>
+                    <li className="nav-item"><Link to ="/update_budget" className="nav-link" href="#!">Update Budget</Link></li>
                 </ul>
             </div>
         </div>

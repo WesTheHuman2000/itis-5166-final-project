@@ -13,6 +13,7 @@ import LogoutPage from './pages/LogoutPage';
 import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
 import Footer from './components/Footer'
+import UpdateBudget from './pages/UpdateBudget';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path='/logout' element= {<LogoutPage/>}></Route>
           <Route path='/signup' element= {<SignupPage/>}></Route>
           <Route path='/dashboard' element= {<DashboardPage/>}></Route>
+          <Route path='/update_budget' element= {<UpdateBudget/>}></Route>
         </Routes>
       </div>
       <Footer/>
