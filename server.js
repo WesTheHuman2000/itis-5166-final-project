@@ -59,6 +59,30 @@ app.post('/createBudget', (req, res) => {
     );
 });
 
+// create account WIP
+app.post('/api/register', (req, res)=>{
+    const { username, password } = req.body; 
+    
+    connection.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, password], (error, results)=>{
+        if (error){
+            console.error('Create account insert failed: ', error);
+            res.status(500).send(`Error inserting new budget: ${error.message}`);
+        }
+        else {
+            // Redirect to the patient list page or any other page as needed
+            console.log('Received form data:', req.body);
+            res.status(200).send('user inserted successfully');
+        }
+
+        
+
+    console.log(req.body);
+    console.log('Username created: ' +username);
+    console.log('Pass created: ' +password);
+    });
+});
+
+//login
 app.post('/api/login', (req, res)=>{
     const { username, password } = req.body; 
     const secretKey = 'My super secret key';
