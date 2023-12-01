@@ -38,3 +38,7 @@ CREATE TABLE users (
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL
   );
+  
+  SELECT * FROM users;
+  
+UPDATE budget_data SET user_id = 1 WHERE budget_id <4;
