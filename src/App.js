@@ -14,6 +14,8 @@ import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
 import Footer from './components/Footer'
 import UpdateBudget from './pages/UpdateBudget';
+import Delete from './components/Delete';
+import UpdateEntry from './pages/UpdateEntry';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
           <Route path='/signup' element= {<SignupPage/>}></Route>
           <Route path='/dashboard' element= {<DashboardPage/>}></Route>
           <Route path='/update_budget' element= {<UpdateBudget/>}></Route>
+          <Route path="/delete/:budget_id" element={<Delete />} />
+          <Route path="/budget/:budget_id" element={<UpdateEntry/>} />
         </Routes>
       </div>
       <Footer/>

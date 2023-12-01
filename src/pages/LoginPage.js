@@ -1,53 +1,78 @@
-import React from 'react';
+import React, { useState,  } from 'react';
 import {
-  Link
+  Link,
+  useNavigate
 } from 'react-router-dom'
+import Axios from 'axios';
 
-
+// should work on api login function
 function LoginPage() {
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
+  const navigate = useNavigate();
+  const handleInputChange = (change) => {
+    setFormData({
+      ...formData,
+      [change.target.name]: change.target.value,
+    });
+  };
+  
+  const handleLogin = async () => {
+    try {
+      const response = await Axios.post('http://localhost:5000/api/login', {
+        username: formData.username,
+        password: formData.password,
+      });
+      console.log('Server response:', response.data);
+      if (response.data.success) {
+        const token = response.data.token;
+        localStorage.setItem('jwt', token);
+        
+        navigate('/dashboard');
+      }
+      
+      
+    } catch (error) {
+      console.error('Error logging in:', error);
+      // Handle error, e.g., show an error message to the user
+    }
+  };
+  
+
+
   return (
     <div className='container mt-5'>
-
-    
       <form>
-
-        <div class="form-outline mb-4">
-          <input type="email" id="form2Example1" class="form-control" />
-          <label class="form-label" for="form2Example1">Email address</label>
+        <div className='form-outline mb-4'>
+          <input type='Username' id='form2Example1' className='form-control' name='username' value={formData.username} onChange={handleInputChange}></input>
+          <label className='form-label' htmlFor='form2Example1'>
+            Username
+          </label>
         </div>
 
-      
-        <div class="form-outline mb-4">
-          <input type="password" id="form2Example2" class="form-control" />
-          <label class="form-label" for="form2Example2">Password</label>
+        <div className='form-outline mb-4'>
+          <input type='password' id='form2Example2' className='form-control' name='password' value={formData.password} onChange={handleInputChange} ></input>
+          <label className='form-label' htmlFor='form2Example2'>
+            Password
+          </label>
         </div>
+        <button
+          type='button'
+          className='btn btn-primary btn-block mb-4'
+          onClick={handleLogin}
+        >
+          Sign in
+        </button>
 
-      
-        <div class="row mb-4">
-          <div class="col d-flex justify-content-center">
-          
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
-              <label class="form-check-label" for="form2Example31"> Remember me </label>
-            </div>
-          </div>
-
-          <div class="col">
-            
-            <a href="#!">Forgot password?</a>
-          </div>
+        <div className='text-center'>
+          <p>
+            Not a member? <Link to='/signup'>Register</Link>
+          </p>
         </div>
-
-        <button type="button" class="btn btn-primary btn-block mb-4">Sign in</button>
-
-        
-        <div class="text-center">
-          <p>Not a member? <Link to ='/signup'>Register</Link></p>
-          
-        </div>
-    </form>
-
-  </div>
+      </form>
+    </div>
   );
 }
 

@@ -2,39 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import BarChart from '../components/BarChart';
 import PieChart from '../components/PieChart';
+import { Link, useParams } from 'react-router-dom';
 
 
-/** 
 function DashboardPage() {
-    
-    let extractedData =[];
-
-    Axios.get('http://localhost:5000/budget').then((res)=>{
-        extractedData = res.data
-        console.log(extractedData)
-    });
-    
-    const [budgetData, setBudgetData] = useState({
-        labels: extractedData.map((data)=>data.title),
-        datasets: [{
-            label: "Budget Amount",
-            data: extractedData.map((data)=> data.budget_amt)
-        }]
-        
-      });
-    
-       
-    
-    
-
-  return (
-    <BarChart chartData={budgetData}/>
-  );
-}
-
-export default DashboardPage;
-*/
-function DashboardPage() {
+    const [extractedData, setExtractedData] = useState([]);
     const [budgetData, setBudgetData] = useState({
       labels: [],
       datasets: [
@@ -44,17 +16,19 @@ function DashboardPage() {
         },
       ],
     });
-  
+    const { budget_id } = useParams();
     useEffect(() => {
       const fetchData = async () => {
         try {
           const response = await Axios.get('http://localhost:5000/budget');
-          const extractedData = response.data;
-  
-          const labels = extractedData.map((data) => data.title);
-          const data = extractedData.map((data) => data.budget_amt);
-          const color = extractedData.map((data)=> data.color);
-          const expense = extractedData.map((data)=> data.expense)
+          const data = response.data;
+
+          setExtractedData(data);
+          
+          const labels = data.map((data) => data.title);
+          const budgetData = data.map((data) => data.budget_amt);
+          const color = data.map((data)=> data.color);
+          const expense = data.map((data)=> data.expense)
           const expensesColors = color.map(color => expenseColor(color));
           
           setBudgetData({
@@ -62,7 +36,7 @@ function DashboardPage() {
             datasets: [
               {
                 label: 'Budget Data',
-                data: data,
+                data: budgetData,
                 backgroundColor: color
               },  {
                 label: 'Expenses',
@@ -78,7 +52,7 @@ function DashboardPage() {
   
       fetchData();
     }, []); 
-  
+    
     return (
       <div>
         <div>
@@ -92,6 +66,7 @@ function DashboardPage() {
         <table className="table table-lg">
           <thead>
             <tr>
+              <th>Budget ID</th>
               <th>Title</th>
               <th>Budget</th>
               <th>Expenses</th>
@@ -102,13 +77,14 @@ function DashboardPage() {
           <tbody>
             {budgetData.labels.map((title, index) => (
               <tr key={index}>
+                <td>{extractedData[index].budget_id}</td>
                 <td>{title}</td>
                 <td>{budgetData.datasets[0].data[index]}</td>
                 <td>{budgetData.datasets[1].data[index]}</td>
                 <td style={{ backgroundColor: budgetData.datasets[0].backgroundColor[index], width: '20px', height: '20px' }}></td>
                 <td>
-                    <a href="" className="edit" title="Edit" data-toggle="tooltip"><i className="material-icons">&#xE254;</i></a>
-                    <a href="" className="delete" title="Delete" data-toggle="tooltip"><i className="material-icons">&#xE872;</i></a>
+                    <Link to={`/budget/${extractedData[index].budget_id}`} className="edit" title="Edit" data-toggle="tooltip"><i className="material-icons">&#xE254;</i></Link>
+                    <Link to={`/delete/${extractedData[index].budget_id}`} className="delete" title="Delete" data-toggle="tooltip"><i className="material-icons">&#xE872;</i></Link>
                 </td>
               </tr>
             ))}

@@ -1,23 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import {
-  useNavigate
+  useNavigate,
+  useParams
 } from 'react-router-dom'
 
-function UpdateBudget() {
- 
-  const [formData, setFormData] = useState({
-    title: '',
-    budget_amt: 0,
-    expense: 0,
-    color: '#ffffff', 
-    
-  });
+function UpdateEntry() {
+    const { budget_id } = useParams();
+    const [formData, setFormData] = useState({
+            title: '',
+            budget_amt: 0,
+            expense: 0,
+            color: '#ffffff', 
+        });
 
  
   const navigate = useNavigate();
   
+  useEffect(() => {
+    // Fetch the data for the selected entry using the budget_id
+    const fetchData = async () => {
+      try {
+        const response = await Axios.get(`http://localhost:5000/budget/${budget_id}`);
+        const update = response.data;
 
+        // Update the form state with the fetched data
+        setFormData({
+          title: update.title,
+          budget_amt: update.budget_amt,
+          expense: update.expense,
+          color: update.color,
+        });
+      } catch (error) {
+        console.error('Error fetching entry data:', error);
+      }
+    };
+
+    fetchData();
+  }, [budget_id]);
+  
+  
   const handleInputChange = (change) => {
     setFormData({
       ...formData,
@@ -30,7 +52,7 @@ function UpdateBudget() {
     try {
       console.log('Submitting form...');
       
-      const response = await Axios.post('http://localhost:5000/createBudget', formData);
+      const response = await Axios.put(`http://localhost:5000/updateBudget/${budget_id}`, formData);
       navigate('/dashboard')
       console.log('Server response:', response.data);
       console.log(response.data);
@@ -73,11 +95,11 @@ function UpdateBudget() {
             </div>
             
 
-            <button type="submit" className="btn btn-primary" >Add Budget Item</button>
+            <button type="submit" className="btn btn-primary" >Update Budget Item</button>
         </form> 
     </div>
     
   );
 }
 
-export default UpdateBudget;
+export default UpdateEntry;
