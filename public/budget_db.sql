@@ -10,7 +10,7 @@ CREATE TABLE budget_data(
  );
  
  INSERT INTO budget_data VALUES
- (DEFAULT, 'rent', 500, 500, '#FF5733'), (DEFAULT, 'food', 100, 50, '#92FF90'), (DEFAULT, 'entertainment', 100, 70, '#AC32A6');
+ (DEFAULT, 'rent', 500, 500, '#FF5733', 1), (DEFAULT, 'food', 100, 50, '#92FF90', 1), (DEFAULT, 'entertainment', 100, 70, '#AC32A6', 1);
  
  SELECT * FROM budget_data;
  
@@ -42,3 +42,5 @@ CREATE TABLE users (
   SELECT * FROM users;
   
 UPDATE budget_data SET user_id = 1 WHERE budget_id <4;
+
+delete FROM budget_data WHERE user_id = 1;

@@ -7,6 +7,7 @@ import { Link, useParams } from 'react-router-dom';
 
 function DashboardPage() {
     const [extractedData, setExtractedData] = useState([]);
+    
     const [budgetData, setBudgetData] = useState({
       labels: [],
       datasets: [
@@ -17,12 +18,22 @@ function DashboardPage() {
       ],
     });
     const { budget_id } = useParams();
+    const user_id = localStorage.getItem('user_id');
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await Axios.get('http://localhost:5000/budget');
+          const token = localStorage.getItem('jwt'); // Retrieve token from local storage
+          
+          
+          const response = await Axios.get('http://localhost:5000/budget', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              user_id: user_id,
+            },
+          });
           const data = response.data;
 
+          
           setExtractedData(data);
           
           const labels = data.map((data) => data.title);
@@ -51,7 +62,7 @@ function DashboardPage() {
       };
   
       fetchData();
-    }, []); 
+    }, [user_id]); 
     
     return (
       <div>
@@ -83,8 +94,8 @@ function DashboardPage() {
                 <td>{budgetData.datasets[1].data[index]}</td>
                 <td style={{ backgroundColor: budgetData.datasets[0].backgroundColor[index], width: '20px', height: '20px' }}></td>
                 <td>
-                    <Link to={`/budget/${extractedData[index].budget_id}`} className="edit" title="Edit" data-toggle="tooltip"><i className="material-icons">&#xE254;</i></Link>
-                    <Link to={`/delete/${extractedData[index].budget_id}`} className="delete" title="Delete" data-toggle="tooltip"><i className="material-icons">&#xE872;</i></Link>
+                    <Link to={`/budget/${user_id}/${extractedData[index].budget_id}`} className="edit" title="Edit" data-toggle="tooltip"><i className="material-icons">&#xE254;</i></Link>
+                    <Link to={`/delete/${user_id}/${extractedData[index].budget_id}`} className="delete" title="Delete" data-toggle="tooltip"><i className="material-icons">&#xE872;</i></Link>
                 </td>
               </tr>
             ))}

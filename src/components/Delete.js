@@ -4,20 +4,17 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 
 
-function Delete(){
-    
-    
-    
+function Delete(){   
     const navigate = useNavigate();
-    const { budget_id } = useParams();
-    console.log('Component rendered with budget_id:', budget_id);
-    console.log('this is the budget id:' +budget_id);
+    const { user_id, budget_id } = useParams();
+
+    
     // handle the deletion api
     useEffect(()=>{
         console.log('Effect triggered with budget_id:', budget_id);
         const deleteBudget = async() =>{
             try{
-                await Axios.delete(`http://localhost:5000/delete/${budget_id}`);
+                await Axios.delete(`http://localhost:5000/delete/${user_id}/${budget_id}`);
                 console.log('Budget item is deleted: ');
                 navigate('/dashboard');
             } catch(error){
@@ -25,7 +22,7 @@ function Delete(){
             }
         };
         deleteBudget(); 
-    },[navigate, budget_id]);
+    },[navigate, user_id, budget_id]);
     return(
         <div>
             Delete budget

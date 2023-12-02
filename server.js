@@ -21,13 +21,16 @@ var connection = mysql.createConnection({
 
 app.get('/budget', async (req, res)=>{
     // this gets the info from the database
-    connection.query('SELECT * FROM budget_data', function(error, results, fields){
+    
+    
+    const user_id = req.headers.user_id;
+    
+    connection.query('SELECT * FROM budget_data WHERE user_id = ?', [user_id], function(error, results, fields){
         if (error) {
             res.status(500).send('Error fetching patient data');
             return;
         }
-        // after getting the db info, it assigns it to patientData then renders the ejs 
-        // template views/patient.ejs which is essentially an html with js in it
+        
         
         res.json(results);
         
@@ -40,12 +43,13 @@ app.post('/createBudget', (req, res) => {
         title,
         budget_amt,
         expense,
-        color
+        color,
+        user_id
     } = req.body;
     console.log(req.body);
-    // Perform the database insertion
-    connection.query('INSERT INTO budget_data (title, budget_amt, expense, color) VALUES (?, ?, ?, ?)',
-        [title, budget_amt, expense, color],
+    
+    connection.query('INSERT INTO budget_data (title, budget_amt, expense, color, user_id) VALUES (?, ?, ?, ?, ?)',
+        [title, budget_amt, expense, color, user_id],
         (error, results) => {
             if (error) {
                 console.error('Error inserting budget:', error);
@@ -107,11 +111,19 @@ app.post('/api/login', (req, res)=>{
 
         const user = results[0];
         if (password === user.password){
-            let token= jwt.sign({id: user.id, username: user.username}, secretKey,{expiresIn: '3m'});
+            let token= jwt.sign({user_id: user.user_id, username: user.username }, secretKey,{expiresIn: '3m'});
+            //test if user_id is correct
+            console.log('Server response:', {
+                success: true,
+                err: null, 
+                token,
+                user_id: user.user_id,
+            });
             res.json({
                 success: true,
                 err: null, 
-                token
+                token,
+                user_id: user.user_id
             });
         } else {
             res.status(401).json({
@@ -141,11 +153,12 @@ app.get('/budget/:budget_id', async (req, res)=>{
     });
 });
 
-app.delete('/delete/:budget_id', (req, res) => {
+app.delete('/delete/:user_id/:budget_id', (req, res) => {
+    const user_id = req.params.user_id;
     const toDelete = req.params.budget_id;
 
-    connection.query('DELETE FROM budget_data WHERE budget_id = ?',
-        [toDelete],
+    connection.query('DELETE FROM budget_data WHERE user_id = ? AND budget_id = ?',
+        [user_id, toDelete],
         (error, results) => {
             if (error) {
                 console.error('Error deleting data:', error);

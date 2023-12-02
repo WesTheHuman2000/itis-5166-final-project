@@ -13,8 +13,8 @@ function UpdateBudget() {
     color: '#ffffff', 
     
   });
-
- 
+// getting the locally sotred UID
+  const user_id = localStorage.getItem('user_id');
   const navigate = useNavigate();
   
 
@@ -30,7 +30,10 @@ function UpdateBudget() {
     try {
       console.log('Submitting form...');
       
-      const response = await Axios.post('http://localhost:5000/createBudget', formData);
+      const response = await Axios.post('http://localhost:5000/createBudget', {
+        ...formData,
+        user_id: user_id,  // Include user_id in the request body
+      });
       navigate('/dashboard')
       console.log('Server response:', response.data);
       console.log(response.data);

@@ -31,7 +31,8 @@ function App() {
           <Route path='/signup' element= {<SignupPage/>}></Route>
           <Route path='/dashboard' element= {<DashboardPage/>}></Route>
           <Route path='/update_budget' element= {<UpdateBudget/>}></Route>
-          <Route path="/delete/:budget_id" element={<Delete />} />
+          
+          <Route path="/delete/:user_id/:budget_id" element={<Delete />} />
           <Route path="/budget/:budget_id" element={<UpdateEntry/>} />
         </Routes>
       </div>
