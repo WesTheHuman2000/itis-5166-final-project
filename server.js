@@ -4,6 +4,7 @@ const port = 5000;
 const mysql = require('mysql2')
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 app.use(express.json());
@@ -66,8 +67,14 @@ app.post('/createBudget', (req, res) => {
 // create account WIP
 app.post('/api/register', (req, res)=>{
     const { username, password } = req.body; 
-    
-    connection.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, password], (error, results)=>{
+    console.log('old pass '+password);
+    bcrypt.hash(password, 10, (err, hash)=>{
+        console.log('new pass '+hash);
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Failed to hash the password' });
+        }
+        connection.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hash], (error, results)=>{
         if (error){
             console.error('Create account insert failed: ', error);
             res.status(500).send(`Error inserting new budget: ${error.message}`);
@@ -80,10 +87,12 @@ app.post('/api/register', (req, res)=>{
 
         
 
-    console.log(req.body);
-    console.log('Username created: ' +username);
-    console.log('Pass created: ' +password);
+        console.log(req.body);
+        console.log('Username created: ' +username);
+        console.log('Pass created: ' +hash);
     });
+    })
+    
 });
 
 //login
@@ -110,28 +119,41 @@ app.post('/api/login', (req, res)=>{
         }
 
         const user = results[0];
-        if (password === user.password){
-            let token= jwt.sign({user_id: user.user_id, username: user.username }, secretKey,{expiresIn: '3m'});
-            //test if user_id is correct
-            console.log('Server response:', {
-                success: true,
-                err: null, 
-                token,
-                user_id: user.user_id,
-            });
-            res.json({
-                success: true,
-                err: null, 
-                token,
-                user_id: user.user_id
-            });
-        } else {
-            res.status(401).json({
-                success: false,
-                token: null,
-                err: 'Username or password is incorrect'
-            });
-        }
+        bcrypt.compare(password, user.password, (err, passwordMatch)=>{
+            if (err) {
+                console.error('Error comparing passwords: ', err);
+                res.status(500).json({
+                    success: false,
+                    token: null,
+                    err: 'internal server error'
+                });
+                return;
+            }
+
+            if (passwordMatch){
+                let token= jwt.sign({user_id: user.user_id, username: user.username }, secretKey,{expiresIn: '3m'});
+                //test if user_id is correct
+                console.log('Server response:', {
+                    success: true,
+                    err: null, 
+                    token,
+                    user_id: user.user_id,
+                });
+                res.json({
+                    success: true,
+                    err: null, 
+                    token,
+                    user_id: user.user_id
+                });
+            } else {
+                res.status(401).json({
+                    success: false,
+                    token: null,
+                    err: 'Username or password is incorrect'
+                });
+            }
+        })
+        
     })
 
     console.log(req.body);
@@ -140,7 +162,7 @@ app.post('/api/login', (req, res)=>{
 });
 
 // for getting specific entries
-app.get('/budget/:budget_id', async (req, res)=>{
+app.get('/budget/:user_id/:budget_id', async (req, res)=>{
     const budget_id = req.params.budget_id;
     
     connection.query('SELECT * FROM budget_data WHERE budget_id = ?', [budget_id], (error, results)=>{
@@ -171,11 +193,13 @@ app.delete('/delete/:user_id/:budget_id', (req, res) => {
 });
 
 // for updating entries
-app.put('/updateBudget/:budget_id', async (req,res)=>{
+// work on now
+app.put('/updateBudget/:user_id/:budget_id', async (req,res)=>{
     const toUpdate = req.params.budget_id;
+    const user_id = req.params.user_id;
     
-    connection.query('UPDATE budget_data SET title = ?, budget_amt = ?, expense =?, color=? WHERE budget_id=?',
-    [req.body.title, req.body.budget_amt, req.body.expense, req.body.color, toUpdate],
+    connection.query('UPDATE budget_data SET title = ?, budget_amt = ?, expense =?, color=? WHERE user_id=? AND budget_id =?',
+    [req.body.title, req.body.budget_amt, req.body.expense, req.body.color, user_id, toUpdate],
     (error, results) => {
         if (error) {
             console.error('Error updating data:', error);

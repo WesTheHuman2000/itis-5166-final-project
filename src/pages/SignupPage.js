@@ -43,7 +43,7 @@ function SignupPage() {
 
         <div className="form-outline mb-4">
           <input type='Username' id='form2Example1' className='form-control' name='username' value={formData.username} onChange={handleInputChange}></input>
-          <label className="form-label" htmlFor="form2Example1">Email address</label>
+          <label className="form-label" htmlFor="form2Example1">Username</label>
         </div>
 
       

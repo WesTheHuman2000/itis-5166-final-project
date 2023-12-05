@@ -33,7 +33,7 @@ function App() {
           <Route path='/update_budget' element= {<UpdateBudget/>}></Route>
           
           <Route path="/delete/:user_id/:budget_id" element={<Delete />} />
-          <Route path="/budget/:budget_id" element={<UpdateEntry/>} />
+          <Route path="/budget/:user_id/:budget_id" element={<UpdateEntry/>} />
         </Routes>
       </div>
       <Footer/>
