@@ -20,7 +20,9 @@ function SignupPage() {
 
   const handleRegister = async () => {
     try {
-      const response = await Axios.post('http://localhost:5000/api/register', {
+      localStorage.removeItem('jwt');
+    localStorage.removeItem('user_id');
+      const response = await Axios.post('http://67.205.136.28:5000/api/register', {
         username: formData.username,
         password: formData.password,
       });

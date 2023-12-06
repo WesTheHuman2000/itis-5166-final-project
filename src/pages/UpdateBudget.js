@@ -30,7 +30,7 @@ function UpdateBudget() {
     try {
       console.log('Submitting form...');
       
-      const response = await Axios.post('http://localhost:5000/createBudget', {
+      const response = await Axios.post('http://67.205.136.28:5000/createBudget', {
         ...formData,
         user_id: user_id,  // Include user_id in the request body
       });

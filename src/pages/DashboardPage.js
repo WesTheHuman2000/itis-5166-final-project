@@ -25,7 +25,7 @@ function DashboardPage() {
           const token = localStorage.getItem('jwt'); // Retrieve token from local storage
           
           
-          const response = await Axios.get('http://localhost:5000/budget', {
+          const response = await Axios.get('http://67.205.136.28:5000/budget', {
             headers: {
               Authorization: `Bearer ${token}`,
               user_id: user_id,
@@ -67,7 +67,7 @@ function DashboardPage() {
     return (
       <div>
         <div>
-          <BarChart data-testid='header-1' chartData={budgetData} />
+          <BarChart chartData={budgetData} />
         </div>
         <div>
           <PieChart chartData={budgetData} />

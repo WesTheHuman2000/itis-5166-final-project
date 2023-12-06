@@ -1,6 +1,6 @@
 const express = require('express');
 const compression = require('compression');
-const port = 5000;
+const port = process.env.port || 5000;
 const mysql = require('mysql2')
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -12,17 +12,17 @@ app.use(cors());
 app.use(compression());
 
 var connection = mysql.createConnection({
-    host        : 'localhost', //127.0.0.1
-    user        : 'root', 
-    password    : 'password', // change this
-    database    : 'budgetdb'
+    host        : 'sql5.freemysqlhosting.net', //127.0.0.1
+    user        : 'sql5668264', 
+    password    : 'tcXzruYSbE', // change this
+    database    : 'sql5668264'
 });
 
 
 
 app.get('/budget', async (req, res)=>{
     // this gets the info from the database
-    
+    connection.connect();
     
     const user_id = req.headers.user_id;
     
@@ -40,6 +40,7 @@ app.get('/budget', async (req, res)=>{
 });
 
 app.post('/createBudget', (req, res) => {
+    connection.connect();
     const {
         title,
         budget_amt,
@@ -66,6 +67,7 @@ app.post('/createBudget', (req, res) => {
 
 // create account WIP
 app.post('/api/register', (req, res)=>{
+    connection.connect();
     const { username, password } = req.body; 
     console.log('old pass '+password);
     bcrypt.hash(password, 10, (err, hash)=>{
@@ -97,6 +99,7 @@ app.post('/api/register', (req, res)=>{
 
 //login
 app.post('/api/login', (req, res)=>{
+    connection.connect();
     const { username, password } = req.body; 
     const secretKey = 'My super secret key';
     connection.query('SELECT * FROM users WHERE username = ?', [username], (error, results)=>{
@@ -155,14 +158,11 @@ app.post('/api/login', (req, res)=>{
         })
         
     })
-
-    console.log(req.body);
-    console.log('Username: ' +username);
-    console.log('Pass: ' +password);
 });
 
 // for getting specific entries
 app.get('/budget/:user_id/:budget_id', async (req, res)=>{
+    connection.connect();
     const budget_id = req.params.budget_id;
     
     connection.query('SELECT * FROM budget_data WHERE budget_id = ?', [budget_id], (error, results)=>{
@@ -176,6 +176,7 @@ app.get('/budget/:user_id/:budget_id', async (req, res)=>{
 });
 
 app.delete('/delete/:user_id/:budget_id', (req, res) => {
+    connection.connect();
     const user_id = req.params.user_id;
     const toDelete = req.params.budget_id;
 
@@ -195,6 +196,7 @@ app.delete('/delete/:user_id/:budget_id', (req, res) => {
 // for updating entries
 // work on now
 app.put('/updateBudget/:user_id/:budget_id', async (req,res)=>{
+    connection.connect();
     const toUpdate = req.params.budget_id;
     const user_id = req.params.user_id;
     

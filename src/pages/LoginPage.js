@@ -18,33 +18,10 @@ function LoginPage() {
       [change.target.name]: change.target.value,
     });
   };
-  /** 
   const handleLogin = async () => {
     try {
-      const response = await Axios.post('http://localhost:5000/api/login', {
-        username: formData.username,
-        password: formData.password,
-      });
-      console.log('Server response:', response.data);
-      if (response.data.success) {
-        const { token, user_id } = response.data;
-        console.log('this is the user id decoded: '+response.data.user_id);
-        localStorage.setItem('jwt', token);
-        localStorage.setItem('user_id', user_id);
-
-        navigate('/dashboard');
-      }
       
-      
-    } catch (error) {
-      console.error('Error logging in:', error);
-      // Handle error, e.g., show an error message to the user
-    }
-  };
-  */
-  const handleLogin = async () => {
-    try {
-      const response = await Axios.post('http://localhost:5000/api/login', {
+      const response = await Axios.post('http://67.205.136.28:5000/api/login', {
         username: formData.username,
         password: formData.password,
       });
@@ -58,7 +35,7 @@ function LoginPage() {
         localStorage.setItem('jwt', token);
         localStorage.setItem('user_id', user_id);
 
-        Axios.get('http://localhost:5000/budget', {
+        Axios.get('http://67.205.136.28:5000/budget', {
           headers: {
             Authorization: `Bearer ${token}`,
             user_id: user_id

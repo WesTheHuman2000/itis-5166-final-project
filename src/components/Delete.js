@@ -14,7 +14,7 @@ function Delete(){
         console.log('Effect triggered with budget_id:', budget_id);
         const deleteBudget = async() =>{
             try{
-                await Axios.delete(`http://localhost:5000/delete/${user_id}/${budget_id}`);
+                await Axios.delete(`http://67.205.136.28:5000/delete/${user_id}/${budget_id}`);
                 console.log('Budget item is deleted: ');
                 navigate('/dashboard');
             } catch(error){

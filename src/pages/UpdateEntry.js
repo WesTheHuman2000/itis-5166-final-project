@@ -21,7 +21,7 @@ function UpdateEntry() {
     // Fetch the data for the selected entry using the budget_id
     const fetchData = async () => {
       try {
-        const response = await Axios.get(`http://localhost:5000/budget/${user_id}/${budget_id}`, {
+        const response = await Axios.get(`http://67.205.136.28:5000/budget/${user_id}/${budget_id}`, {
           headers: {
             user_id: user_id,
           },
@@ -56,7 +56,7 @@ function UpdateEntry() {
     try {
       console.log('Submitting form...');
       
-      const response = await Axios.put(`http://localhost:5000/updateBudget/${user_id}/${budget_id}`, formData);
+      const response = await Axios.put(`http://67.205.136.28:5000/updateBudget/${user_id}/${budget_id}`, formData);
       navigate('/dashboard')
       console.log('Server response:', response.data);
       console.log(response.data);
