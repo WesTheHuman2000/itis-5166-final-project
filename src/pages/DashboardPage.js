@@ -67,7 +67,7 @@ function DashboardPage() {
     return (
       <div>
         <div>
-          <BarChart chartData={budgetData} />
+          <BarChart data-testid='header-1' chartData={budgetData} />
         </div>
         <div>
           <PieChart chartData={budgetData} />
