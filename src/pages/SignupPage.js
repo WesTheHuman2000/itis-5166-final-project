@@ -21,12 +21,20 @@ function SignupPage() {
   const handleRegister = async () => {
     try {
       localStorage.removeItem('jwt');
-    localStorage.removeItem('user_id');
-      const response = await Axios.post('http://67.205.136.28:5000/api/register', {
+      localStorage.removeItem('user_id');
+      const registerResponse = await Axios.post('http://67.205.136.28:5000/api/register', {
         username: formData.username,
         password: formData.password,
       });
-      console.log('Server response:', response.data);
+      console.log('Server response (register):', registerResponse.data);
+
+      const loginResponse = await Axios.post('http://67.205.136.28:5000/api/login', {
+      username: formData.username,
+      password: formData.password,
+    });
+    console.log('Server response (login):', loginResponse.data);
+    localStorage.setItem('jwt', loginResponse.data.token);
+    localStorage.setItem('user_id', loginResponse.data.user_id);
       navigate('/dashboard');
       
       
