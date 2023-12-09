@@ -17,26 +17,29 @@ import UpdateBudget from './pages/UpdateBudget';
 import Delete from './components/Delete';
 import UpdateEntry from './pages/UpdateEntry';
 
+
 function App() {
+  
   return (
     
     
     <Router>
-    <Menu/>
-      <div className="container px-4 px-lg-5">
-        <Routes>
-          <Route path='/' element= {<AboutPage/>}></Route>
-          <Route path='/login' element= {<LoginPage/>}></Route>
-          <Route path='/logout' element= {<LogoutPage/>}></Route>
-          <Route path='/signup' element= {<SignupPage/>}></Route>
-          <Route path='/dashboard' element= {<DashboardPage/>}></Route>
-          <Route path='/update_budget' element= {<UpdateBudget/>}></Route>
-          
-          <Route path="/delete/:user_id/:budget_id" element={<Delete />} />
-          <Route path="/budget/:user_id/:budget_id" element={<UpdateEntry/>} />
-        </Routes>
-      </div>
-      <Footer/>
+      
+      <Menu/>
+        <div className="container px-4 px-lg-5">
+          <Routes>
+            <Route path='/' element= {<AboutPage/>}></Route>
+            <Route path='/login' element= {<LoginPage/>}></Route>
+            <Route path='/logout' element= {<LogoutPage/>}></Route>
+            <Route path='/signup' element= {<SignupPage/>}></Route>
+            <Route path='/dashboard' element= {<DashboardPage/>}></Route>
+            <Route path='/update_budget' element= {<UpdateBudget/>}></Route>
+            
+            <Route path="/delete/:user_id/:budget_id" element={<Delete />} />
+            <Route path="/budget/:user_id/:budget_id" element={<UpdateEntry/>} />
+          </Routes>
+        </div>
+        <Footer/>
     </Router>
     
   );
